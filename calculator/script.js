@@ -1,21 +1,46 @@
-const result = document.getElementById('result');
+let display = document.getElementById('display');
+let buttons = document.querySelectorAll('button');
 
-function display(value) {
-    result.value += value;
-}
+let num1 = '';
+let num2 = '';
+let operator = '';
 
-function clearResult() {
-    result.value = '';
-}
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        let value = button.textContent;
 
-function deleteChar() {
-    result.value = result.value.slice(0, -1);
-}
-
-function calculate() {
-    try {
-        result.value = eval(result.value);
-    } catch (error) {
-        result.value = 'Error';
-    }
-}
+        if (value >= '0' && value <= '9' || value === '.') {
+            if (operator === '') {
+                num1 += value;
+                display.value = num1;
+            } else {
+                num2 += value;
+                display.value = num1 + operator + num2;
+            }
+        } else if (value === '+' || value === '-' || value === '*' || value === '/') {
+            operator = value;
+            display.value = num1 + operator;
+        } else if (value === '=') {
+            if (num1 !== '' && num2 !== '' && operator !== '') {
+                let result = eval(num1 + operator + num2);
+                display.value = result;
+                num1 = result.toString();
+                num2 = '';
+                operator = '';
+            }
+        } else if (value === 'C') {
+            num1 = '';
+            num2 = '';
+            operator = '';
+            display.value = '';
+        } else if (value === '<') {
+            if (operator === '') {
+                num1 = num1.slice(0, -1);
+                display.value = num1;
+            } else {
+                num2 = num2.slice(0, -1);
+                display.value = num1 + operator + num2;
+            }
+        }
+    });
+});
